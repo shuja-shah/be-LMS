@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const lessonSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  video: {
+    type: String,
+    required: true,
+  },
+});
+
 const courseSchema = mongoose.Schema(
   {
     courseName: {
@@ -10,24 +25,23 @@ const courseSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
     courseThumbnail: {
       type: String,
       required: true,
     },
-
     createdAt: {
       type: Date,
       default: Date.now,
     },
-    teacherType:{
+    teacherType: {
       type: String,
       required: true,
     },
-    isPublished:{
+    isPublished: {
       type: Number,
       default: 0,
-    }
+    },
+    lessons: [lessonSchema], // Optional nested array of lessons
   },
   {
     timestamps: true,
