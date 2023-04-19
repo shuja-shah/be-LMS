@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Chat = require('../models/conversation');
 const Message = require('../models/message');
-const { authCheck } = require("../middlewares/_auth");
+const { requireLogin } = require("../middlewares/requireLogin");
 
 // Get all chats
-router.get('/chats', authCheck, async (req, res) => {
+router.get('/chats', requireLogin, async (req, res) => {
     try {
         const chats = await Chat.find();
         res.send(chats);
@@ -15,7 +15,7 @@ router.get('/chats', authCheck, async (req, res) => {
 });
 
 // Get a specific chat by its id
-router.get('/chats/:id', authCheck, async (req, res) => {
+router.get('/chats/:id', requireLogin, async (req, res) => {
     try {
         const chat = await Chat.findById(req.params.id).populate({
             path: 'messages',
@@ -28,7 +28,7 @@ router.get('/chats/:id', authCheck, async (req, res) => {
 });
 
 // Create a new chat
-router.post('/chats', authCheck, async (req, res) => {
+router.post('/chats', requireLogin, async (req, res) => {
     try {
         const { name, participants } = req.body;
         if (!participants.length) {
@@ -47,7 +47,7 @@ router.post('/chats', authCheck, async (req, res) => {
     }
 });
 
-router.delete('/chats/:id', authCheck, async (req, res) => {
+router.delete('/chats/:id', requireLogin, async (req, res) => {
     try {
         const chat = await Chat.findById(req.params.id);
         if (!chat) {
@@ -63,7 +63,7 @@ router.delete('/chats/:id', authCheck, async (req, res) => {
 
 
 // Add a new message to a chat by its id
-// router.post('/chats/:id/messages', authCheck, async (req, res) => {
+// router.post('/chats/:id/messages', requireLogin, async (req, res) => {
 //     try {
 //         const { text } = req.body;
 //         const chatId = req.params.id;
@@ -78,7 +78,7 @@ router.delete('/chats/:id', authCheck, async (req, res) => {
 
 
 
-router.post('/chats/:id/messages', authCheck, async (req, res) => {
+router.post('/chats/:id/messages', requireLogin, async (req, res) => {
     try {
         const { text } = req.body;
         const chatId = req.params.id;
@@ -103,7 +103,7 @@ router.post('/chats/:id/messages', authCheck, async (req, res) => {
 });
 
 // Get all messages sent in all chats (admin only)
-router.get('/messages', authCheck, async (req, res) => {
+router.get('/messages', requireLogin, async (req, res) => {
     try {
         const messages = await Message.find().populate('chatId');
         res.send(messages);
