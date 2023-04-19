@@ -110,7 +110,7 @@ module.exports.postMyEnrollCourse__controller = async (req, res, next) => {
 
 module.exports.getCourses__controller = async (req, res, next) => {
   try {
-    const courses = await CourseModel.find();
+    const courses = await CourseModel.find().populate("lessons");
     return res.status(200).json({
       courses,
     });
